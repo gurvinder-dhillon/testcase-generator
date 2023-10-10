@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import generateTestCases from "../utils/generateTestCases";
-import { Container, Row, Col, Form, Button, Table } from "react-bootstrap";
+import {
+	Container,
+	Row,
+	Col,
+	Form,
+	Button,
+	Table,
+	InputGroup,
+	FormControl
+} from "react-bootstrap";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 
@@ -25,11 +34,12 @@ const InputForm = () => {
 	);
 	const [stringInput, setStringInput] = useState("");
 	const [output, setOutput] = useState([]);
+	const [inputTable, setInputTable] = useState(defaultJsonInput);
 
 	const handleSubmit = async () => {
 		try {
 			const result = await generateTestCases(
-				JSON.stringify(jsonInput),
+				JSON.stringify(inputTable),
 				stringInput
 			);
 			if (result && result.cases && Array.isArray(result.cases)) {
@@ -42,7 +52,75 @@ const InputForm = () => {
 			setOutput([]);
 		}
 	};
-	const renderTableHeader = () => {
+
+	const handleInputChange = (e, rowIndex, colIndex) => {
+		const newInputTable = [...inputTable];
+		newInputTable[rowIndex].values[colIndex] = e.target.value;
+		setInputTable(newInputTable);
+	};
+
+	const handleAddColumn = () => {
+		setInputTable([...inputTable, { key: "", values: [] }]);
+	};
+
+	const handleAddValue = (rowIndex) => {
+		const newInputTable = [...inputTable];
+		newInputTable[rowIndex].values.push("");
+		setInputTable(newInputTable);
+	};
+
+	const renderInputTableHeader = () => {
+		return (
+			<thead>
+				<tr>
+					{inputTable.map((item, index) => (
+						<th key={index}>
+							<InputGroup>
+								<FormControl
+									placeholder="Key"
+									value={item.key}
+									onChange={(e) => {
+										const newInputTable = [...inputTable];
+										newInputTable[index].key = e.target.value;
+										setInputTable(newInputTable);
+									}}
+								/>
+							</InputGroup>
+						</th>
+					))}
+					<th>
+						<Button onClick={handleAddColumn}>Add Column</Button>
+					</th>
+				</tr>
+			</thead>
+		);
+	};
+
+	const renderInputTableBody = () => {
+		const maxRows = Math.max(...inputTable.map((item) => item.values.length));
+
+		const rows = [];
+		for (let i = 0; i < maxRows; i++) {
+			rows.push(
+				<tr key={i}>
+					{inputTable.map((item, colIndex) => (
+						<td key={colIndex}>
+							<InputGroup>
+								<FormControl
+									value={item.values[i] || ""}
+									onChange={(e) => handleInputChange(e, colIndex, i)}
+								/>
+							</InputGroup>
+						</td>
+					))}
+				</tr>
+			);
+		}
+
+		return <tbody>{rows}</tbody>;
+	};
+
+	const renderOutputTableHeader = () => {
 		if (output.length === 0) return null;
 
 		const headerKeys = Object.keys(output[0]);
@@ -57,7 +135,7 @@ const InputForm = () => {
 		);
 	};
 
-	const renderTableBody = () => {
+	const renderOutputTableBody = () => {
 		return (
 			<tbody>
 				{output.map((item, index) => (
@@ -116,8 +194,16 @@ const InputForm = () => {
 			<Row>
 				<Col>
 					<Table striped bordered hover>
-						{renderTableHeader()}
-						{renderTableBody()}
+						{renderInputTableHeader()}
+						{renderInputTableBody()}
+					</Table>
+				</Col>
+			</Row>
+			<Row className="mt-5">
+				<Col>
+					<Table striped bordered hover>
+						{renderOutputTableHeader()}
+						{renderOutputTableBody()}
 					</Table>
 				</Col>
 			</Row>

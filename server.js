@@ -20,7 +20,8 @@ app.post("/generate-test-cases", async (req, res) => {
 		let array;
 		// Check if the parsed JSON object is an array
 		// Parse the JSON string
-		const jsonObject = JSON.parse(jsonArray);
+		//const jsonObject = JSON.parse(jsonArray);
+		const jsonObject = jsonArray;
 		if (Array.isArray(jsonObject)) {
 			// Assign the parsed JSON object to an array variable
 			array = jsonObject;
