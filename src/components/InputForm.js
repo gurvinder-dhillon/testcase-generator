@@ -1,17 +1,8 @@
 import React, { useState } from "react";
 import generateTestCases from "../utils/generateTestCases";
-import {
-	Container,
-	Row,
-	Col,
-	Form,
-	Button,
-	Table,
-	InputGroup,
-	FormControl
-} from "react-bootstrap";
-import JsonView from "react18-json-view";
-import "react18-json-view/src/style.css";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import InputTable from "./InputTable";
+import OutputTable from "./OutputTable";
 
 const InputForm = () => {
 	const defaultJsonInput = [
@@ -69,86 +60,6 @@ const InputForm = () => {
 		setInputTable(newInputTable);
 	};
 
-	const renderInputTableHeader = () => {
-		return (
-			<thead>
-				<tr>
-					{inputTable.map((item, index) => (
-						<th key={index}>
-							<InputGroup>
-								<FormControl
-									placeholder="Key"
-									value={item.key}
-									onChange={(e) => {
-										const newInputTable = [...inputTable];
-										newInputTable[index].key = e.target.value;
-										setInputTable(newInputTable);
-									}}
-								/>
-							</InputGroup>
-						</th>
-					))}
-					<th>
-						<Button onClick={handleAddColumn}>Add Column</Button>
-					</th>
-				</tr>
-			</thead>
-		);
-	};
-
-	const renderInputTableBody = () => {
-		const maxRows = Math.max(...inputTable.map((item) => item.values.length));
-
-		const rows = [];
-		for (let i = 0; i < maxRows; i++) {
-			rows.push(
-				<tr key={i}>
-					{inputTable.map((item, colIndex) => (
-						<td key={colIndex}>
-							<InputGroup>
-								<FormControl
-									value={item.values[i] || ""}
-									onChange={(e) => handleInputChange(e, colIndex, i)}
-								/>
-							</InputGroup>
-						</td>
-					))}
-				</tr>
-			);
-		}
-
-		return <tbody>{rows}</tbody>;
-	};
-
-	const renderOutputTableHeader = () => {
-		if (output.length === 0) return null;
-
-		const headerKeys = Object.keys(output[0]);
-		return (
-			<thead>
-				<tr>
-					{headerKeys.map((key, index) => (
-						<th key={index}>{key}</th>
-					))}
-				</tr>
-			</thead>
-		);
-	};
-
-	const renderOutputTableBody = () => {
-		return (
-			<tbody>
-				{output.map((item, index) => (
-					<tr key={index}>
-						{Object.values(item).map((value, i) => (
-							<td key={i}>{value}</td>
-						))}
-					</tr>
-				))}
-			</tbody>
-		);
-	};
-
 	return (
 		<Container>
 			<Row className="mt-5">
@@ -193,18 +104,18 @@ const InputForm = () => {
 			</Row>
 			<Row>
 				<Col>
-					<Table striped bordered hover>
-						{renderInputTableHeader()}
-						{renderInputTableBody()}
-					</Table>
+					<InputTable
+						inputTable={inputTable}
+						setInputTable={setInputTable}
+						handleInputChange={handleInputChange}
+						handleAddColumn={handleAddColumn}
+						handleAddValue={handleAddValue}
+					/>
 				</Col>
 			</Row>
 			<Row className="mt-5">
 				<Col>
-					<Table striped bordered hover>
-						{renderOutputTableHeader()}
-						{renderOutputTableBody()}
-					</Table>
+					<OutputTable output={output} />
 				</Col>
 			</Row>
 		</Container>
