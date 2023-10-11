@@ -1,5 +1,13 @@
 import React from "react";
-import { Table, InputGroup, FormControl, Button } from "react-bootstrap";
+import {
+	Table,
+	InputGroup,
+	FormControl,
+	Button,
+	OverlayTrigger,
+	Tooltip
+} from "react-bootstrap";
+import { BsFillTrashFill, BsX, BsFillBackspaceFill } from "react-icons/bs";
 
 const InputTable = ({
 	inputTable,
@@ -8,6 +16,24 @@ const InputTable = ({
 	handleAddColumn,
 	handleAddValue
 }) => {
+	const handleRemoveColumn = (colIndex) => {
+		const newInputTable = [...inputTable];
+		newInputTable.splice(colIndex, 1);
+		setInputTable(newInputTable);
+	};
+
+	const handleClearCell = (rowIndex, colIndex) => {
+		const newInputTable = [...inputTable];
+		newInputTable[colIndex].values[rowIndex] = "";
+		setInputTable(newInputTable);
+	};
+
+	const handleDeleteCell = (rowIndex, colIndex) => {
+		const newInputTable = [...inputTable];
+		newInputTable[colIndex].values.splice(rowIndex, 1);
+		setInputTable(newInputTable);
+	};
+
 	const renderInputTableHeader = () => {
 		return (
 			<thead>
@@ -24,11 +50,21 @@ const InputTable = ({
 										setInputTable(newInputTable);
 									}}
 								/>
+
+								<OverlayTrigger
+									placement="top"
+									overlay={<Tooltip id={`tooltip-top`}>Remove Column</Tooltip>}>
+									<Button
+										variant="outline-danger"
+										onClick={() => handleRemoveColumn(index)}>
+										<BsFillTrashFill />
+									</Button>
+								</OverlayTrigger>
 							</InputGroup>
 						</th>
 					))}
 					<th>
-						<Button onClick={handleAddColumn}>Add Column</Button>
+						<Button onClick={handleAddColumn}>Add Parameter</Button>
 					</th>
 				</tr>
 			</thead>
@@ -49,6 +85,25 @@ const InputTable = ({
 									value={item.values[i] || ""}
 									onChange={(e) => handleInputChange(e, colIndex, i)}
 								/>
+
+								<OverlayTrigger
+									placement="top"
+									overlay={<Tooltip id={`tooltip-top`}>Clear Cell</Tooltip>}>
+									<Button
+										variant="outline-secondary"
+										onClick={() => handleClearCell(i, colIndex)}>
+										<BsX />
+									</Button>
+								</OverlayTrigger>
+								<OverlayTrigger
+									placement="top"
+									overlay={<Tooltip id={`tooltip-top`}>Delete Cell</Tooltip>}>
+									<Button
+										variant="outline-danger"
+										onClick={() => handleDeleteCell(i, colIndex)}>
+										<BsFillBackspaceFill />
+									</Button>
+								</OverlayTrigger>
 							</InputGroup>
 						</td>
 					))}
