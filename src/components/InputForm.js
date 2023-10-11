@@ -11,7 +11,7 @@ const InputForm = () => {
 			values: ["Primary", "Logical", "Single"]
 		},
 		{
-			key: "size",
+			key: "Size",
 			values: ["10", "100", "500", "1000", "5000", "10000", "40000"]
 		},
 		{
@@ -23,15 +23,34 @@ const InputForm = () => {
 	const [jsonInput, setJsonInput] = useState(
 		JSON.stringify(defaultJsonInput, null, 2)
 	);
+
+	const [showJsonInput, setShowJsonInput] = useState(false);
+
+	const toggleInputView = () => {
+		setShowJsonInput(!showJsonInput);
+	};
 	const [stringInput, setStringInput] = useState("");
 	const [output, setOutput] = useState([]);
 	const [inputTable, setInputTable] = useState(defaultJsonInput);
 
+	const prepareInputForBackend = () => {
+		return inputTable.map((column) => ({
+			key: column.key,
+			values: column.values.filter((value) => value.trim() !== "")
+		}));
+	};
+
 	const handleSubmit = async () => {
 		try {
+			const filteredInput = prepareInputForBackend();
+			const formattedConstraints = stringInput
+				.split(/\r?\n/) // Split the string into an array of lines
+				.map((line) => line.trim()) // Trim each line
+				.filter((line) => line.length > 0) // Remove empty lines
+				.join(" "); // Join the lines back into a single string
 			const result = await generateTestCases(
-				JSON.stringify(inputTable),
-				stringInput
+				JSON.stringify(filteredInput),
+				formattedConstraints
 			);
 			if (result && result.cases && Array.isArray(result.cases)) {
 				setOutput(result.cases);
@@ -48,6 +67,14 @@ const InputForm = () => {
 		const newInputTable = [...inputTable];
 		newInputTable[rowIndex].values[colIndex] = e.target.value;
 		setInputTable(newInputTable);
+
+		if (
+			e.key === "Tab" &&
+			rowIndex === Math.max(...inputTable.map((item) => item.values.length)) - 1
+		) {
+			e.preventDefault(); // Prevent focus from moving to the next control
+			handleAddRow();
+		}
 	};
 
 	const handleAddColumn = () => {
@@ -60,23 +87,46 @@ const InputForm = () => {
 		setInputTable(newInputTable);
 	};
 
+	const handleAddRow = () => {
+		const newInputTable = [...inputTable];
+		newInputTable.forEach((item) => item.values.push(""));
+		setInputTable(newInputTable);
+	};
+
 	return (
 		<Container>
 			<Row className="mt-5">
 				<Col>
-					<Form.Group controlId="jsonInput">
-						<Form.Label>JSON Input</Form.Label>
-						<Form.Control
-							as="textarea"
-							rows={10}
-							value={jsonInput}
-							onChange={(e) => setJsonInput(e.target.value)}
+					<Button className="mb-3" onClick={toggleInputView}>
+						{showJsonInput ? "Switch to Table Input" : "Switch to JSON Input"}
+					</Button>
+					<h4>Model</h4>
+					{showJsonInput ? (
+						<Form.Group controlId="jsonInput">
+							<Form.Label>JSON Input</Form.Label>
+							<Form.Control
+								as="textarea"
+								rows={10}
+								value={jsonInput}
+								onChange={(e) => setJsonInput(e.target.value)}
+							/>
+						</Form.Group>
+					) : (
+						<InputTable
+							inputTable={inputTable}
+							setInputTable={setInputTable}
+							handleInputChange={handleInputChange}
+							handleAddColumn={handleAddColumn}
+							handleAddValue={handleAddValue}
+							handleAddRow={handleAddRow}
 						/>
-					</Form.Group>
+					)}
 				</Col>
+			</Row>
+			<Row className="mt-5">
 				<Col>
+					<h4>Constraints</h4>
 					<Form.Group controlId="stringInput">
-						<Form.Label>String Input</Form.Label>
 						<Form.Control
 							as="textarea"
 							rows={10}
@@ -85,32 +135,23 @@ const InputForm = () => {
 						/>
 					</Form.Group>
 				</Col>
-				<Col>
-					<Form.Group controlId="output">
-						<Form.Label>Output</Form.Label>
-						<Form.Control
-							as="textarea"
-							rows={10}
-							readOnly
-							value={JSON.stringify(output, null, 2)}
-						/>
-					</Form.Group>
-				</Col>
+				{output.length > 0 && (
+					<Col>
+						<h4>Output</h4>
+						<Form.Group controlId="output">
+							<Form.Control
+								as="textarea"
+								rows={10}
+								readOnly
+								value={JSON.stringify(output, null, 2)}
+							/>
+						</Form.Group>
+					</Col>
+				)}
 			</Row>
 			<Row className="mt-3 mb-5">
 				<Col>
-					<Button onClick={handleSubmit}>Submit</Button>
-				</Col>
-			</Row>
-			<Row>
-				<Col>
-					<InputTable
-						inputTable={inputTable}
-						setInputTable={setInputTable}
-						handleInputChange={handleInputChange}
-						handleAddColumn={handleAddColumn}
-						handleAddValue={handleAddValue}
-					/>
+					<Button onClick={handleSubmit}>Generate Testcases</Button>
 				</Col>
 			</Row>
 			<Row className="mt-5">

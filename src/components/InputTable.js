@@ -14,7 +14,8 @@ const InputTable = ({
 	setInputTable,
 	handleInputChange,
 	handleAddColumn,
-	handleAddValue
+	handleAddValue,
+	handleAddRow
 }) => {
 	const handleRemoveColumn = (colIndex) => {
 		const newInputTable = [...inputTable];
@@ -32,6 +33,30 @@ const InputTable = ({
 		const newInputTable = [...inputTable];
 		newInputTable[colIndex].values.splice(rowIndex, 1);
 		setInputTable(newInputTable);
+	};
+
+	const handleDeleteRow = (rowIndex) => {
+		const newInputTable = [...inputTable];
+		newInputTable.forEach((item) => item.values.splice(rowIndex, 1));
+		setInputTable(newInputTable);
+	};
+
+	const renderInputTableFooter = () => {
+		return (
+			<tfoot>
+				<tr>
+					{inputTable.map((_, index) => (
+						<td key={index}></td>
+					))}
+					<td>
+						<Button onClick={handleAddColumn}>Add Parameter</Button>
+					</td>
+					<td>
+						<Button onClick={handleAddRow}>Add Value</Button>
+					</td>
+				</tr>
+			</tfoot>
+		);
 	};
 
 	const renderInputTableHeader = () => {
@@ -63,9 +88,6 @@ const InputTable = ({
 							</InputGroup>
 						</th>
 					))}
-					<th>
-						<Button onClick={handleAddColumn}>Add Parameter</Button>
-					</th>
 				</tr>
 			</thead>
 		);
@@ -84,8 +106,20 @@ const InputTable = ({
 								<FormControl
 									value={item.values[i] || ""}
 									onChange={(e) => handleInputChange(e, colIndex, i)}
+									onKeyDown={(e) => {
+										if (
+											e.key === "Enter" &&
+											i ===
+												Math.max(
+													...inputTable.map((item) => item.values.length)
+												) -
+													1
+										) {
+											e.preventDefault();
+											handleAddRow();
+										}
+									}}
 								/>
-
 								<OverlayTrigger
 									placement="top"
 									overlay={<Tooltip id={`tooltip-top`}>Clear Cell</Tooltip>}>
@@ -95,18 +129,20 @@ const InputTable = ({
 										<BsX />
 									</Button>
 								</OverlayTrigger>
-								<OverlayTrigger
-									placement="top"
-									overlay={<Tooltip id={`tooltip-top`}>Delete Cell</Tooltip>}>
-									<Button
-										variant="outline-danger"
-										onClick={() => handleDeleteCell(i, colIndex)}>
-										<BsFillBackspaceFill />
-									</Button>
-								</OverlayTrigger>
 							</InputGroup>
 						</td>
 					))}
+					<td>
+						<OverlayTrigger
+							placement="top"
+							overlay={<Tooltip id={`tooltip-top`}>Delete Row</Tooltip>}>
+							<Button
+								variant="outline-danger"
+								onClick={() => handleDeleteRow(i)}>
+								<BsFillBackspaceFill />
+							</Button>
+						</OverlayTrigger>
+					</td>
 				</tr>
 			);
 		}
@@ -115,10 +151,18 @@ const InputTable = ({
 	};
 
 	return (
-		<Table striped bordered hover>
-			{renderInputTableHeader()}
-			{renderInputTableBody()}
-		</Table>
+		<>
+			<Table striped="columns" bordered hover responsive>
+				{renderInputTableHeader()}
+				{renderInputTableBody()}
+			</Table>
+			<div className="mt-2">
+				<Button className="me-3" onClick={handleAddColumn}>
+					Add Parameter
+				</Button>
+				<Button onClick={handleAddRow}>Add Value</Button>
+			</div>
+		</>
 	);
 };
 

@@ -10,7 +10,7 @@ const App = () => {
 		<>
 			<Navigation />
 			<Header />
-			<Container>
+			<Container data-bs-theme="light">
 				<Row className="mt-5">
 					<Col>
 						<InputForm />

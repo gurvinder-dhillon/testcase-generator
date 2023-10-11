@@ -8,6 +8,7 @@ app.use(express.json());
 
 app.post("/generate-test-cases", async (req, res) => {
 	try {
+		const inputString = req.body.inputString;
 		console.log("UnParsed model:", req.body.model);
 
 		const jsonArray = JSON.parse(
@@ -37,8 +38,27 @@ app.post("/generate-test-cases", async (req, res) => {
 
 		// Print the array
 		console.log(array);
+		let result;
 
-		const cases = await pictNode.pict({ model: array });
+		if (inputString.trim() !== "") {
+			//const constraints = inputString.split("\n").join(" ");
+			const constraints = inputString;
+			console.log("Constraints:", constraints);
+			result = await pictNode.strings(
+				{
+					model: array,
+					constraints
+				},
+				{
+					caseSensitive: true
+				}
+			);
+		} else {
+			result = await pictNode.pict({ model: array });
+		}
+
+		//const cases = await pictNode.pict({ model: array });
+		const cases = result;
 		console.log(cases);
 		res.status(200).json({ cases });
 	} catch (error) {
