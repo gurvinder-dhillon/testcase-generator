@@ -7,7 +7,11 @@ import {
 	OverlayTrigger,
 	Tooltip
 } from "react-bootstrap";
-import { BsFillTrashFill, BsX, BsFillBackspaceFill } from "react-icons/bs";
+import {
+	BsFillTrashFill,
+	BsX,
+	BsFillBackspaceFill
+} from "react-icons/bs/index.esm.js";
 
 const InputTable = ({
 	inputTable,

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import generateTestCases from "../utils/generateTestCases";
+import generateTestCases from "../utils/generateTestCases.js";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import InputTable from "./InputTable";
-import OutputTable from "./OutputTable";
+import InputTable from "./InputTable.js";
+import OutputTable from "./OutputTable.js";
 
 const InputForm = () => {
 	const defaultJsonInput = [
@@ -16,7 +16,15 @@ const InputForm = () => {
 		},
 		{
 			key: "fileSystem",
-			values: ["FAT", "FAT32", "NTFS"]
+			values: ["FAT", "FAT32", "NTFS", "1", "2", "3", "4", "5"]
+		},
+		{
+			key: "OS",
+			values: ["Mac", "Win", "Linux"]
+		},
+		{
+			key: "Name",
+			values: ["Guru", "Raman", "Anhad"]
 		}
 	];
 
@@ -42,7 +50,9 @@ const InputForm = () => {
 
 	const handleSubmit = async () => {
 		try {
-			const filteredInput = prepareInputForBackend();
+			const filteredInput = showJsonInput
+				? JSON.parse(jsonInput)
+				: prepareInputForBackend();
 			const formattedConstraints = stringInput
 				.split(/\r?\n/) // Split the string into an array of lines
 				.map((line) => line.trim()) // Trim each line

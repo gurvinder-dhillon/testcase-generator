@@ -1,10 +1,34 @@
-const express = require("express");
-const cors = require("cors");
-const pictNode = require("pict-node");
+import express from "express";
+import cors from "cors";
+//const pictNode = require("pict-node");
+import { pict, negative, strings, weight, alias } from "pict-node";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+function customReviver(key, value) {
+	if (typeof value === "string") {
+		if (value.startsWith("negative(")) {
+			const argument = value.slice(9, -1); // Extract the argument from the string
+			return negative(argument);
+		} else if (value.startsWith("weight(")) {
+			const argsString = value.slice(7, -1); // Extract the arguments from the string
+			const [arg1, arg2] = argsString.split(", ").map((arg) => {
+				if (!isNaN(arg)) {
+					return parseInt(arg, 10);
+				}
+				return arg;
+			});
+			return weight(arg1, arg2);
+		} else if (value.startsWith("alias(")) {
+			const argsString = value.slice(6, -1); // Extract the arguments from the string
+			const argsArray = JSON.parse(`[${argsString}]`); // Parse the arguments as an array
+			return alias(argsArray);
+		}
+	}
+	return value;
+}
 
 app.post("/generate-test-cases", async (req, res) => {
 	try {
@@ -12,7 +36,8 @@ app.post("/generate-test-cases", async (req, res) => {
 		console.log("UnParsed model:", req.body.model);
 
 		const jsonArray = JSON.parse(
-			req.body.model.replace(/(\r\n|\n|\r|\t)/gm, "")
+			req.body.model.replace(/(\r\n|\n|\r|\t)/gm, ""),
+			customReviver
 		);
 		console.log(jsonArray);
 
@@ -44,22 +69,30 @@ app.post("/generate-test-cases", async (req, res) => {
 			//const constraints = inputString.split("\n").join(" ");
 			const constraints = inputString;
 			console.log("Constraints:", constraints);
-			result = await pictNode.strings(
+			console.log(negative("-1"));
+			result = await strings(
 				{
 					model: array,
 					constraints
 				},
 				{
+					order: 2,
 					caseSensitive: true
 				}
 			);
 		} else {
-			result = await pictNode.pict({ model: array });
+			console.log(negative("-1"));
+			result = await pict(
+				{ model: array },
+				{
+					order: 2
+				}
+			);
 		}
 
 		//const cases = await pictNode.pict({ model: array });
 		const cases = result;
-		console.log(cases);
+		//console.log(cases);
 		res.status(200).json({ cases });
 	} catch (error) {
 		console.error(error);

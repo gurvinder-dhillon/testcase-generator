@@ -1,8 +1,8 @@
 import React from "react";
-import InputForm from "./components/InputForm";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Navigation from "./components/Navigation";
+import InputForm from "./components/InputForm.js";
+import Header from "./components/Header.js";
+import Footer from "./components/Footer.js";
+import Navigation from "./components/Navigation.js";
 import { Container, Row, Col } from "react-bootstrap";
 
 const App = () => {
