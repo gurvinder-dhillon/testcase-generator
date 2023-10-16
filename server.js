@@ -70,6 +70,7 @@ app.post("/generate-test-cases", async (req, res) => {
 			const constraints = inputString;
 			console.log("Constraints:", constraints);
 			console.log(negative("-1"));
+			console.log(alias(["Win10", "Windows10", "WinWin"]));
 			result = await strings(
 				{
 					model: array,
@@ -82,6 +83,7 @@ app.post("/generate-test-cases", async (req, res) => {
 			);
 		} else {
 			console.log(negative("-1"));
+			console.log(alias(["Win10", "Windows10", "WinWin"]));
 			result = await pict(
 				{ model: array },
 				{

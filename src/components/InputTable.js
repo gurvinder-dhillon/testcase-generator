@@ -67,6 +67,7 @@ const InputTable = ({
 		return (
 			<thead>
 				<tr>
+					<th>#</th>
 					{inputTable.map((item, index) => (
 						<th key={index}>
 							<InputGroup>
@@ -104,6 +105,7 @@ const InputTable = ({
 		for (let i = 0; i < maxRows; i++) {
 			rows.push(
 				<tr key={i}>
+					<td>{i + 1}</td>
 					{inputTable.map((item, colIndex) => (
 						<td key={colIndex}>
 							<InputGroup>

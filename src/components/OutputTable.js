@@ -9,6 +9,7 @@ const OutputTable = ({ output }) => {
 		return (
 			<thead>
 				<tr>
+					<th>Scenario</th>
 					{headerKeys.map((key, index) => (
 						<th key={index}>{key}</th>
 					))}
@@ -22,6 +23,7 @@ const OutputTable = ({ output }) => {
 			<tbody>
 				{output.map((item, index) => (
 					<tr key={index}>
+						<td>{index + 1}</td>
 						{Object.values(item).map((value, i) => (
 							<td key={i}>{value}</td>
 						))}
