@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import generateTestCases from "../utils/generateTestCases.js";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import InputTable from "./InputTable.js";
@@ -7,24 +7,12 @@ import OutputTable from "./OutputTable.js";
 const InputForm = () => {
 	const defaultJsonInput = [
 		{
-			key: "type",
-			values: ["Primary", "Logical", "Single"]
-		},
-		{
-			key: "Size",
-			values: ["10", "100", "500", "1000", "5000", "10000", "40000"]
-		},
-		{
-			key: "fileSystem",
-			values: ["FAT", "FAT32", "NTFS", "1", "2", "3", "4", "5"]
-		},
-		{
 			key: "OS",
 			values: ["Mac", "Win", "Linux"]
 		},
 		{
-			key: "Name",
-			values: ["Guru", "Raman", "Anhad"]
+			key: "Browser",
+			values: ["Chrome", "Edge", "Safari", "Firefox"]
 		}
 	];
 
@@ -37,9 +25,26 @@ const InputForm = () => {
 	const toggleInputView = () => {
 		setShowJsonInput(!showJsonInput);
 	};
-	const [stringInput, setStringInput] = useState("");
+
+	const [stringInput, setStringInput] =
+		useState(`IF [fileSystem] = "FAT"   THEN [Size] <= 4096;
+IF [fileSystem] = "FAT32" THEN [Size] <= 32000;`);
 	const [output, setOutput] = useState([]);
 	const [inputTable, setInputTable] = useState(defaultJsonInput);
+	const [orderOptions, setOrderOptions] = useState([{ value: 2, label: "2" }]);
+	const [orderValue, setOrderValue] = useState(2);
+
+	useEffect(() => {
+		const numColumns = inputTable.length - 2;
+		const newOrderOptions = [
+			{ value: 1, label: "1" },
+			{ value: 2, label: "2" }
+		];
+		for (let i = 1; i <= numColumns; i++) {
+			newOrderOptions.push({ value: i + 2, label: i + 2 });
+		}
+		setOrderOptions(newOrderOptions);
+	}, [inputTable]);
 
 	const prepareInputForBackend = () => {
 		return inputTable.map((column) => ({
@@ -60,7 +65,8 @@ const InputForm = () => {
 				.join(" "); // Join the lines back into a single string
 			const result = await generateTestCases(
 				JSON.stringify(filteredInput),
-				formattedConstraints
+				formattedConstraints,
+				orderValue
 			);
 			if (result && result.cases && Array.isArray(result.cases)) {
 				setOutput(result.cases);
@@ -104,13 +110,29 @@ const InputForm = () => {
 	};
 
 	return (
-		<Container>
-			<Row className="mt-5">
+		<Form>
+			<Row className="mt-3 mb-5">
+				<Col xs={2}>
+					<h4>Order</h4>
+
+					<Form.Select
+						id="order"
+						value={orderValue}
+						onChange={(e) => setOrderValue(parseInt(e.target.value))}>
+						{orderOptions.map((option) => (
+							<option key={option.value} value={option.value}>
+								{option.label}
+							</option>
+						))}
+					</Form.Select>
+				</Col>
+			</Row>
+			<Row className="mt-3">
 				<Col>
+					<h4>Model</h4>
 					<Button className="mb-3" onClick={toggleInputView}>
 						{showJsonInput ? "Switch to Table Input" : "Switch to JSON Input"}
 					</Button>
-					<h4>Model</h4>
 					{showJsonInput ? (
 						<Form.Group controlId="jsonInput">
 							<Form.Label>JSON Input</Form.Label>
@@ -147,7 +169,7 @@ const InputForm = () => {
 				</Col>
 				{output.length > 0 && (
 					<Col>
-						<h4>Output</h4>
+						<h4>JSON Output</h4>
 						<Form.Group controlId="output">
 							<Form.Control
 								as="textarea"
@@ -164,12 +186,15 @@ const InputForm = () => {
 					<Button onClick={handleSubmit}>Generate Testcases</Button>
 				</Col>
 			</Row>
-			<Row className="mt-5">
-				<Col>
-					<OutputTable output={output} />
-				</Col>
+			<Row className="mt-3">
+				{output.length > 0 && (
+					<Col>
+						<h4>Generated Testcases</h4>
+						<OutputTable output={output} />
+					</Col>
+				)}
 			</Row>
-		</Container>
+		</Form>
 	);
 };
 

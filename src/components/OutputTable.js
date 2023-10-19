@@ -34,6 +34,7 @@ const OutputTable = ({ output }) => {
 	};
 
 	return (
+
 		<Table striped bordered hover>
 			{renderOutputTableHeader()}
 			{renderOutputTableBody()}

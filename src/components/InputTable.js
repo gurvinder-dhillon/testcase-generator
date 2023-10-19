@@ -162,7 +162,7 @@ const InputTable = ({
 				{renderInputTableHeader()}
 				{renderInputTableBody()}
 			</Table>
-			<div className="mt-2">
+			<div className="mt-1">
 				<Button className="me-3" onClick={handleAddColumn}>
 					Add Parameter
 				</Button>

@@ -32,6 +32,8 @@ function customReviver(key, value) {
 
 app.post("/generate-test-cases", async (req, res) => {
 	try {
+		const order = req.body.order;
+		console.log("Order:", order);
 		const inputString = req.body.inputString;
 		console.log("UnParsed model:", req.body.model);
 
@@ -77,7 +79,7 @@ app.post("/generate-test-cases", async (req, res) => {
 					constraints
 				},
 				{
-					order: 2,
+					order: order,
 					caseSensitive: true
 				}
 			);
@@ -87,7 +89,7 @@ app.post("/generate-test-cases", async (req, res) => {
 			result = await pict(
 				{ model: array },
 				{
-					order: 2
+					order: order
 				}
 			);
 		}
