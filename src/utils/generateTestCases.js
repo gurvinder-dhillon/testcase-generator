@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const generateTestCases = async (jsonInput, stringInput) => {
+const generateTestCases = async (jsonInput, stringInput, orderValue) => {
 	const model = [
 		{
 			key: "location",
@@ -46,7 +46,8 @@ const generateTestCases = async (jsonInput, stringInput) => {
 			"http://localhost:3001/generate-test-cases",
 			{
 				model: jsonInput,
-				inputString: stringInput
+				inputString: stringInput,
+				order: orderValue
 			}
 		);
 

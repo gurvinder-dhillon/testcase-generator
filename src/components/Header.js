@@ -3,9 +3,11 @@ import { Container } from "react-bootstrap";
 
 const Header = () => {
 	return (
-		<div className="bg-primary text-white py-4">
+		<div className=" text-black py-2">
 			<Container>
-				<h1>JSON and String Input</h1>
+				<h3 className="align-middle text-center mt-5">
+					Pairwise Combinatorial Testcases Generator
+				</h3>
 			</Container>
 		</div>
 	);

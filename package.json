@@ -2,7 +2,13 @@
   "name": "testcase-generator",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.14.13",
+    "@mui/material": "^5.14.13",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -11,9 +17,11 @@
     "concurrently": "^8.2.1",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "pict-node": "^1.2.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.11.0",
     "react-input-json": "^0.1.11",
     "react-json-editor-ajrm": "^2.5.14",
     "react-scripts": "5.0.1",
@@ -46,7 +54,6 @@
     ]
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
-    "pict-node": "^1.2.1"
+    "nodemon": "^3.0.1"
   }
 }
