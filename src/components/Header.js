@@ -1,13 +1,18 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 const Header = () => {
 	return (
-		<div className=" text-black py-2">
+		<div className="bg-light">
 			<Container>
-				<h3 className="align-middle text-center mt-5">
-					Pairwise Combinatorial Testcases Generator
-				</h3>
+				<Row className="py-3">
+					<Col className="text-center">
+						<h3 className="display-5">Test Gen</h3>
+						<small className="lead text-muted">
+							Model-Based Test Case Generation
+						</small>
+					</Col>
+				</Row>
 			</Container>
 		</div>
 	);
