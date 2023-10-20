@@ -1,8 +1,11 @@
-import express from "express";
-import cors from "cors";
+//import express from "express";
+//import * as express from "express";
+//import cors from "cors";
 //const pictNode = require("pict-node");
-import { pict, negative, strings, weight, alias } from "pict-node";
-
+const { pict, negative, strings, weight, alias } = require("pict-node");
+//import { pict, negative, strings, weight, alias } from "pict-node";
+const cors = require("cors");
+const express = require("express");
 const app = express();
 app.use(cors());
 app.use(express.json());

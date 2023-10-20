@@ -3,6 +3,7 @@ import generateTestCases from "../utils/generateTestCases.js";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import InputTable from "./InputTable.js";
 import OutputTable from "./OutputTable.js";
+import gaEvents from "../utils/gaEvents.js";
 
 const InputForm = () => {
 	const defaultJsonInput = [
@@ -73,6 +74,7 @@ IF [fileSystem] = "FAT32" THEN [Size] <= 32000;`);
 			} else {
 				setOutput([]);
 			}
+			gaEvents.testGen();
 		} catch (error) {
 			console.error(error);
 			setOutput([]);
