@@ -1,15 +1,19 @@
 import React from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const Navigation = () => {
 	return (
 		<Navbar bg="dark" data-bs-theme="dark">
 			<Container>
-				<Navbar.Brand href="#home" className="px-1">
+				<Navbar.Brand href="/" className="px-1">
 					<img src="/logo.png" width="50" height="50" alt=""></img>
 					<span className="px-3 h2 align-middle font-weight-bold">DHILLON</span>
 				</Navbar.Brand>
 				<Nav variant="underline" className="d-flex justify-content-end">
+					<Nav.Link as={Link} to="/">
+						Home
+					</Nav.Link>
 					<Nav.Link
 						href="https://dhillon.guru/"
 						target="_blank"
@@ -33,6 +37,9 @@ const Navigation = () => {
 						target="_blank"
 						rel="noopener noreferrer">
 						Contact
+					</Nav.Link>
+					<Nav.Link as={Link} to="/help">
+						Help
 					</Nav.Link>
 				</Nav>
 			</Container>

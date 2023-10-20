@@ -1,6 +1,5 @@
 Test Gen
 ========
-Pairwise Combinatorial Testcases Generator
 ------------------------------------------------
 Contact : <gurvinder@dhillon.guru>
 
@@ -10,17 +9,16 @@ Test Gen isndesigned for generating combinations of inputs for software testing.
 
 For instance, to create a test suite for disk partition creation, the domain can be described by the following parameters: ```Partition Type```, ```Partition Size```, ```File System```, ```Format Method```, ```Cluster Size```, and ```Compression```. Each parameter consists of a finite number of possible values. For example, ```Compression``` can only be ```On``` or ```Off```, other parameters are made finite with help of equivalence partitioning:
 
-        | Type   | Size  | Format method | File system | Cluster size | Compression |
-        |--------|-------|---------------|-------------|--------------|-------------|
-        | Single | 10    | Quick         | FAT         | 512          | On          |
-        | Span   | 100   | Slow          | FAT32       | 1024         | Off         |
-        | Stripe | 500   |               | NTFS        | 2048         |             |
-        | Mirror | 1000  |               |             | 4096         |             |
-        | RAID-5 | 5000  |               |             | 8192         |             |
-        |        | 10000 |               |             | 16384        |             |
-        |        | 40000 |               |             | 32768        |             |
-        |        |       |               |             | 65536        |             |
-
+      | Type   | Size  | Format method | File system | Cluster size | Compression |
+      |--------|-------|---------------|-------------|--------------|-------------|
+      | Single | 10    | Quick         | FAT         | 512          | On          |
+      | Span   | 100   | Slow          | FAT32       | 1024         | Off         |
+      | Stripe | 500   |               | NTFS        | 2048         |             |
+      | Mirror | 1000  |               |             | 4096         |             |
+      | RAID-5 | 5000  |               |             | 8192         |             |
+      |        | 10000 |               |             | 16384        |             |
+      |        | 40000 |               |             | 32768        |             |
+      |        |       |               |             | 65536        |             |
 
 For such a model, thousands of possible test cases can be generated. It would be difficult to test all of them in a reasonable amount of time. Instead of attempting to cover all possible combinations, we settle on testing all possible pairs of values. For example, ```{Type:Single, File system:FAT}``` is one such value pair, ```{Size:10, Format method:Slow}``` is another. Consequently, one test case can cover many pairs. Research shows that testing all pairs is an effective alternative to exhaustive testing and is much less costly.
 
