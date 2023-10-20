@@ -3,16 +3,21 @@ import generateTestCases from "../utils/generateTestCases.js";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import InputTable from "./InputTable.js";
 import OutputTable from "./OutputTable.js";
+import gaEvents from "../utils/gaEvents.js";
 
 const InputForm = () => {
 	const defaultJsonInput = [
 		{
 			key: "OS",
-			values: ["Mac", "Win", "Linux"]
+			values: ["Mac", "Win", "Linux", "negative(FireOS)"]
 		},
 		{
 			key: "Browser",
 			values: ["Chrome", "Edge", "Safari", "Firefox"]
+		},
+		{
+			key: "Device",
+			values: ["Macbook", "Surface", "Chromebook", "negative(iPad)"]
 		}
 	];
 
@@ -27,8 +32,8 @@ const InputForm = () => {
 	};
 
 	const [stringInput, setStringInput] =
-		useState(`IF [fileSystem] = "FAT"   THEN [Size] <= 4096;
-IF [fileSystem] = "FAT32" THEN [Size] <= 32000;`);
+		useState(`IF [OS] = "Mac"   THEN [Browser] <> "Edge";
+IF [OS] = "Win"   THEN [Browser] <> "Safari";`);
 	const [output, setOutput] = useState([]);
 	const [inputTable, setInputTable] = useState(defaultJsonInput);
 	const [orderOptions, setOrderOptions] = useState([{ value: 2, label: "2" }]);
@@ -73,6 +78,7 @@ IF [fileSystem] = "FAT32" THEN [Size] <= 32000;`);
 			} else {
 				setOutput([]);
 			}
+			gaEvents.testGen();
 		} catch (error) {
 			console.error(error);
 			setOutput([]);
