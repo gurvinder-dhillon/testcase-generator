@@ -9,11 +9,15 @@ const InputForm = () => {
 	const defaultJsonInput = [
 		{
 			key: "OS",
-			values: ["Mac", "Win", "Linux"]
+			values: ["Mac", "Win", "Linux", "negative(FireOS)"]
 		},
 		{
 			key: "Browser",
 			values: ["Chrome", "Edge", "Safari", "Firefox"]
+		},
+		{
+			key: "Device",
+			values: ["Macbook", "Surface", "Chromebook", "negative(iPad)"]
 		}
 	];
 
@@ -28,8 +32,8 @@ const InputForm = () => {
 	};
 
 	const [stringInput, setStringInput] =
-		useState(`IF [fileSystem] = "FAT"   THEN [Size] <= 4096;
-IF [fileSystem] = "FAT32" THEN [Size] <= 32000;`);
+		useState(`IF [OS] = "Mac"   THEN [Browser] <> "Edge";
+IF [OS] = "Win"   THEN [Browser] <> "Safari";`);
 	const [output, setOutput] = useState([]);
 	const [inputTable, setInputTable] = useState(defaultJsonInput);
 	const [orderOptions, setOrderOptions] = useState([{ value: 2, label: "2" }]);
